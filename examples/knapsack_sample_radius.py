@@ -62,7 +62,7 @@ m = mlopt.Optimizer(problem,
 
 
 # Average request
-theta_bar = 4 * np.ones(2 * n)
+theta_bar = 2 * np.ones(2 * n)
 radius = 1.0
 
 
@@ -99,17 +99,20 @@ m.train(theta_train, learner=mlopt.XGBOOST)
 
 # In[6]:
 
-rset = np.arange(0.5, 4.0, .1)
+rset = np.arange(0.5, 2.5, .1)
 r_accuracy = []
+r_subopt = []
 for r in rset:
     theta_test = sample(theta_bar, r, n=n_test)
     results = m.performance(theta_test)
-    print("Radius: ", r, "Accuracy: %.2f " % results[0]['accuracy'])
+    print("Radius: ", r, "Accuracy: %.2f " % results[0]['accuracy'], "Subopt: %.2f " % results[0]["avg_subopt"])
     r_accuracy.append( results[0]['accuracy'])
+    r_subopt.append( results[0]['avg_subopt'])
     
 r_accuracy = np.array(r_accuracy)
+r_subopt = np.array(r_subopt)
 
-np.savez("knapsack_sample_radius_data.npz", rset = rset, r_accuracy = r_accuracy)
+np.savez("knapsack_sample_radius_data.npz", rset = rset, r_accuracy = r_accuracy, r_subopt = r_subopt)
 
 
 

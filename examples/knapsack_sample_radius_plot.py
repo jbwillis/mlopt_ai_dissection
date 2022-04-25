@@ -9,10 +9,14 @@ r_accuracy = data["r_accuracy"]
 fig, ax = plt.subplots(1,1)
 
 ax.plot(rset, r_accuracy)
-ylim = ax.ylim()
+ylim = ax.get_ylim()
 
 radius = 1.0 # training radius
 ax.plot([radius, radius], ylim)
 
 ax.set_xlabel("Sampling radius")
 ax.set_ylabel("Test accuracy")
+
+fig.savefig("knapsack_sample_radius_accuracy.png")
+
+plt.show()

@@ -91,9 +91,10 @@ theta_test = sample(theta_bar, radius, n=n_test)
 
 # In[5]:
 
-n_train_set = np.array([10*2**n for n in range(0,4)])
+n_train_set = np.array([10, 25, 50, 100, 200, 400, 600, 800, 1000, 1250, 1500])
 
 n_train_accuracy = []
+n_train_subopt = []
 
 for n_train in n_train_set:
     theta_train = sample(theta_bar, radius, n=n_train)
@@ -101,10 +102,12 @@ for n_train in n_train_set:
     m.train(theta_train, learner=mlopt.XGBOOST)
     
     results = m.performance(theta_test)
-    print("N_train: ", n_train, "Accuracy: %.2f " % results[0]['accuracy'])
+    print("N_train: ", n_train, "Accuracy: %.2f " % results[0]['accuracy'],  "Subopt: %.2f " % results[0]['avg_subopt'])
     n_train_accuracy.append( results[0]['accuracy'])
+    n_train_subopt.append( results[0]['avg_subopt'])
     
 n_train_accuracy = np.array(n_train_accuracy)
+n_train_subopt = np.array(n_train_subopt)
 
-np.savez("knapsack_sample_number_data.npz", n_train_set = n_train_set, n_train_accuracy = n_train_accuracy)
+np.savez("knapsack_sample_number_data.npz", n_train_set = n_train_set, n_train_accuracy = n_train_accuracy, n_train_subopt = n_train_subopt)
     
