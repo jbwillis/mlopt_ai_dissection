@@ -52,8 +52,6 @@ constraints = [a @ x <= b,
 # If you just want to remove too many messages
 # change INFO to WARNING
 problem = cp.Problem(cp.Minimize(cost), constraints)
-m = mlopt.Optimizer(problem,
-                    log_level=logging.INFO)
 
 
 # ## Define training and testing parameters
@@ -91,7 +89,7 @@ theta_test = sample(theta_bar, radius, n=n_test)
 
 # In[5]:
 
-n_train_set = np.array([10, 25, 50, 100, 200, 400, 600, 800, 1000, 1250, 1500])
+n_train_set = np.array([25, 50, 100, 200, 400, 600,  1000, 1500, 2000])
 
 n_train_accuracy = []
 n_train_subopt = []
@@ -99,6 +97,8 @@ n_train_subopt = []
 for n_train in n_train_set:
     theta_train = sample(theta_bar, radius, n=n_train)
 
+    m = mlopt.Optimizer(problem,
+                        log_level=logging.INFO)
     m.train(theta_train, learner=mlopt.XGBOOST)
     
     results = m.performance(theta_test)
@@ -106,8 +106,6 @@ for n_train in n_train_set:
     n_train_accuracy.append( results[0]['accuracy'])
     n_train_subopt.append( results[0]['avg_subopt'])
     
-n_train_accuracy = np.array(n_train_accuracy)
-n_train_subopt = np.array(n_train_subopt)
-
-np.savez("knapsack_sample_number_data.npz", n_train_set = n_train_set, n_train_accuracy = n_train_accuracy, n_train_subopt = n_train_subopt)
+    # update data on every iteration in case of failure
+    np.savez("knapsack_sample_number_data.npz", n_train_set = n_train_set, n_train_accuracy = n_train_accuracy, n_train_subopt = n_train_subopt)
     
